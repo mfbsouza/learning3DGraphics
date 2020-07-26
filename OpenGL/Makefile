@@ -1,30 +1,32 @@
 # Makefile by Matheus Souza (github.com/mfbsouza)
 
 # Settings
-CC := gcc
+CC := clang++
 SRCDIR := src
 BUILDDIR:= build
-TARGET := bin/program
+BINDIR := bin
+NAME := program
 
-SRCEXT := c
+SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJETCS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
 # Compiler & Linker Flags
 CFLAGS := -Wall
-LIB := -lSDL2 -lGL -lGLU
+LIB := -lglfw -lGL -lGLU -lGLEW
 INC := -I include
 
-$(TARGET): $(OBJETCS)
+$(BINDIR)/$(NAME): $(OBJETCS)
 	@echo " Linking..."
-	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+	@mkdir -p $(BINDIR)
+	@echo " $(CC) $^ -o $(BINDIR)/$(NAME) $(LIB)"; $(CC) $^ -o $(BINDIR)/$(NAME) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 clean:
-	@echo " Cleaning..."; 
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+	@echo " Cleaning...";
+	@echo " $(RM) -r $(BUILDDIR) $(BINDIR)"; $(RM) -r $(BUILDDIR) $(BINDIR)
 
 .PHONY: clean
