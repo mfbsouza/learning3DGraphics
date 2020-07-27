@@ -35,3 +35,10 @@ void check_opengl(){
 void resize_callback(GLFWwindow *window, int width, int height){
   glViewport(0, 0, width, height);
 }
+
+void process_input() {
+  if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}

@@ -21,6 +21,7 @@ int main(int argc, char const *argv[]) {
   while (!glfwWindowShouldClose(window)) {
 
     // input
+    process_input();
 
     // rendering
     glClearColor(0.2f,0.2f,0.2f,1.0f);
