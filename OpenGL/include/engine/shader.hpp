@@ -9,13 +9,12 @@
 
 class Shader {
   public:
-    // Shader Program ID
-    unsigned int ID;
-
     // Constructor
     Shader (const char *vertexPath,
             const char *fragmentPath,
             const char *geometryPath = nullptr);
+
+    ~Shader ();
 
     // Use/activate Shader Program
     void use();
@@ -26,6 +25,9 @@ class Shader {
     void setFloat (const std::string &name, float value) const;
 
   private:
+    // Shader Program ID
+    unsigned int ID;
+
     void checkCompileErrors(GLuint shader, std::string type);
 };
 

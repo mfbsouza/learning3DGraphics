@@ -8,7 +8,11 @@ Window::Window (const char *title, const int width, const int height) {
     exit(EXIT_FAILURE);
   }
 
-  // TODO: define a OpenGL version to use
+  //Use OpenGL 4.6 core
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
   // #2 - Create a Window and OpenGL Context
   window = SDL_CreateWindow(title,
                             SDL_WINDOWPOS_CENTERED,
@@ -38,6 +42,7 @@ Window::Window (const char *title, const int width, const int height) {
     SDL_Quit();
     exit(EXIT_FAILURE);
   }
+  // TODO: what is the best thing to do for glViewport?
   glViewport(0, 0, width, height);
 
   // #4 - Enable Vsync (Optional)
@@ -57,10 +62,16 @@ Window::~Window () {
 }
 
 void Window::GraphicsAPI () {
-  const GLubyte *gl_version = glGetString(GL_VERSION);
-  std::cout << "OpenGL Graphics Driver: " << gl_version << '\n';
-  const GLubyte *glsl_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
-  std::cout << "GL Shading Language Version: " << glsl_version << '\n';
+  int major, minor, profile;
+  SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+  SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
+  SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profile);
+
+  std::cout << "OpenGL Version: " << major << '.' << minor;
+  if (profile == SDL_GL_CONTEXT_PROFILE_CORE)
+    std::cout << " | Profile: Core\n";
+  else
+    std::cout << " | Profile: Compatibility\n";
 }
 
 int Window::PollEvents () {
