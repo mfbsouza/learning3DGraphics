@@ -13,7 +13,7 @@ OBJETCS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
 # Compiler & Linker Flags
 CFLAGS := -Wall
-LIB := -lSDL2 -lGLEW -lGL
+LIB := -lSDL2 -lSDL2_image -lGLEW -lGL
 INC := -I include
 
 $(BINDIR)/$(NAME): $(OBJETCS)

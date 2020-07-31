@@ -3,7 +3,7 @@
 #include <engine/window.hpp>
 #include <engine/shader.hpp>
 
-#include <stb_image.h>
+#include <SDL2/SDL_image.h>
 
 int main(void) {
 
@@ -19,10 +19,10 @@ int main(void) {
 
   float vertices[] = {
     // positions          // colors           // texture coords
-    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
+    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f, // top right
+    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f, // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 0.0f  // top left
   };
 
   unsigned int indices[] = {
@@ -30,20 +30,20 @@ int main(void) {
     1, 2, 3  // second triangle
   };
 
-  // load texture image
-  int tex1_width, tex1_height, tex1_nrchannels;
-  int tex2_width, tex2_height, tex2_nrchannels;
-
-  stbi_set_flip_vertically_on_load(true); // flip y-axis cus OpenGL standards
-  unsigned char *tex1_data = stbi_load(
-    "/home/bois/git/learning_3D/OpenGL/textures/container.jpg",
-    &tex1_width, &tex1_height, &tex1_nrchannels, 0
+  SDL_Surface *tex1 = IMG_Load(
+    "/home/bois/git/learning_3D/OpenGL/textures/container.jpg"
   );
-
-  unsigned char *tex2_data = stbi_load(
-    "/home/bois/git/learning_3D/OpenGL/textures/awesomeface.png",
-    &tex2_width, &tex2_height, &tex2_nrchannels, 0
+  if (!tex1) {
+    std::cout << "tex1 error" << '\n';
+    exit(EXIT_FAILURE);
+  }
+  SDL_Surface *tex2 = IMG_Load(
+    "/home/bois/git/learning_3D/OpenGL/textures/awesomeface.png"
   );
+  if (!tex2) {
+    std::cout << "tex2 error" << '\n';
+    exit(EXIT_FAILURE);
+  }
 
   unsigned int VAO, VBO, EBO, TBO1, TBO2;
   glGenVertexArrays(1, &VAO);
@@ -95,12 +95,10 @@ int main(void) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   // gen texture and mipmaps
-  if (tex1_data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex1_width, tex1_height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, tex1_data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  } else std::cout << "ERROR::READ_FILE_TEXTURE1\n";
-  stbi_image_free(tex1_data);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex1->w, tex1->h, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, tex1->pixels);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  SDL_FreeSurface(tex1);
 
   // load and create a texture 2
   glBindTexture(GL_TEXTURE_2D, TBO2);
@@ -111,12 +109,10 @@ int main(void) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   // gen texture and mipmaps
-  if (tex2_data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex2_width, tex2_height, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, tex2_data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  } else std::cout << "ERROR::READ_FILE_TEXTURE2\n";
-  stbi_image_free(tex2_data);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex2->w, tex2->h, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, tex2->pixels);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  SDL_FreeSurface(tex2);
 
   testingShader.use();
   testingShader.setInt("texture1", 0);
