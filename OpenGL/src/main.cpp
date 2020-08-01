@@ -4,6 +4,9 @@
 #include <engine/shader.hpp>
 
 #include <SDL2/SDL_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 int main(void) {
 
@@ -128,11 +131,11 @@ int main(void) {
     while (screen.PollEvents()) {
       running = !screen.shouldClose();
     }
-
+    
     // input
 
     // render
-    glClearColor(0.2f,0.3f,0.3f,1.0f);
+    glClearColor(0.0f,0.0f,0.0f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // bind texture
@@ -141,9 +144,53 @@ int main(void) {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, TBO2);
 
+    // create transformations matrix
+    glm::mat4 transform = glm::mat4(1.0f); // indentity matrix
+    transform = glm::translate(
+      transform,
+      glm::vec3(0.5f,-0.5f,0.0f)
+    );
+    transform = glm::rotate(
+      transform,
+      ((float)SDL_GetTicks())/1000,
+      glm::vec3(0.0f, 0.0f, 1.0f)
+    );
+    // create transformations matrix for second container
+    glm::mat4 transform2 = glm::mat4(1.0f); // indentity matrix
+    transform2 = glm::translate(
+      transform2,
+      glm::vec3(-0.5f,0.5f,0.0f)
+    );
+    transform2 = glm::rotate(
+      transform2,
+      ((float)SDL_GetTicks())/1000 + glm::radians(90.0f),
+      glm::vec3(0.0f, 0.0f, 1.0f)
+    );
+    transform2 = glm::scale(
+      transform2,
+      glm::vec3(0.5, 0.5, 0.5)
+    );
+
     // render container
     testingShader.use();
+
+    // send transform matrix to shader
+    glUniformMatrix4fv(
+      glGetUniformLocation(testingShader.ID, "transform"),
+      1,
+      GL_FALSE,
+      glm::value_ptr(transform)
+    );
+
     glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    glUniformMatrix4fv(
+      glGetUniformLocation(testingShader.ID, "transform"),
+      1,
+      GL_FALSE,
+      glm::value_ptr(transform2)
+    );
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // check call events and swap buffers
