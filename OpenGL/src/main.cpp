@@ -131,7 +131,7 @@ int main(void) {
     while (screen.PollEvents()) {
       running = !screen.shouldClose();
     }
-    
+
     // input
 
     // render
@@ -159,7 +159,11 @@ int main(void) {
     glm::mat4 transform2 = glm::mat4(1.0f); // indentity matrix
     transform2 = glm::translate(
       transform2,
-      glm::vec3(-0.5f,0.5f,0.0f)
+      glm::vec3(
+        sin(((float)SDL_GetTicks())/1000),
+        sin(((float)SDL_GetTicks())/1000),
+        0.0f
+      )
     );
     transform2 = glm::rotate(
       transform2,
@@ -168,7 +172,11 @@ int main(void) {
     );
     transform2 = glm::scale(
       transform2,
-      glm::vec3(0.5, 0.5, 0.5)
+      glm::vec3(
+        sin(((float)SDL_GetTicks())/1000),
+        sin(((float)SDL_GetTicks())/1000),
+        sin(((float)SDL_GetTicks())/1000)
+      )
     );
 
     // render container
