@@ -17,6 +17,8 @@ class Window {
     void GraphicsAPI();
 
     // Event methods
+    SDL_Event event;
+
     int  PollEvents();
     void SwapBuffers();
     bool shouldClose();
@@ -24,7 +26,6 @@ class Window {
   private:
     SDL_Window    *window;
     SDL_GLContext  context;
-    SDL_Event      event;
 };
 
 #endif
