@@ -1,31 +1,33 @@
 # Makefile by Matheus Souza (github.com/mfbsouza)
 
-# Settings
-CC := g++
-SRCDIR := src
-BUILDDIR:= build
-TARGET := bin/program
+# Project name
 
-SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJETCS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+TARGET = program
 
-# Compiler & Linker Flags
-CFLAGS := -Wall
-LIB := -lSDL2 -lvulkan
-INC := -I include
+# Dir structure
 
-$(TARGET): $(OBJETCS)
-	@echo " Linking..."
-	@mkdir -p bin
-	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+SRCDIR   = src
+BUILDDIR = build
+SRCEXT   = cpp
+SOURCES  = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS  = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+
+# Compiler and Linker settings
+CC = g++
+CFLAGS = -Wall
+LDFLAGS = 
+
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(LDFLAGS) $^ -o $@
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
-	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@echo " Cleaning..."; 
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+	rm -rf $(BUILDDIR) $(TARGET)
 
-.PHONY: clean
+.PHONY: all clean

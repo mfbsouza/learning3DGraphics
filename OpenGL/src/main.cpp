@@ -23,8 +23,8 @@ int main(void) {
   screen.GraphicsAPI();
 
   Shader shader(
-    "/home/bois/git/learning_3D/OpenGL/shaders/shader.vert",
-    "/home/bois/git/learning_3D/OpenGL/shaders/shader.frag"
+    "/home/bois/workspace/learning_3d/OpenGL/shaders/shader.vert",
+    "/home/bois/workspace/learning_3d/OpenGL/shaders/shader.frag"
   );
 
   // grab mouse
@@ -89,14 +89,14 @@ int main(void) {
   };
 
   SDL_Surface *tex1 = IMG_Load(
-    "/home/bois/git/learning_3D/OpenGL/textures/container.jpg"
+    "/home/bois/workspace/learning_3d/OpenGL/textures/container.jpg"
   );
   if (!tex1) {
     std::cout << "tex1 error" << '\n';
     exit(EXIT_FAILURE);
   }
   SDL_Surface *tex2 = IMG_Load(
-    "/home/bois/git/learning_3D/OpenGL/textures/awesomeface.png"
+    "/home/bois/workspace/learning_3d/OpenGL/textures/awesomeface.png"
   );
   if (!tex2) {
     std::cout << "tex2 error" << '\n';
